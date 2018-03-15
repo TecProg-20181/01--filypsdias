@@ -1,9 +1,9 @@
 #include <stdio.h>
 
 typedef struct _pixel {
-    unsigned short int r;
-    unsigned short int g;
-    unsigned short int b;
+    unsigned short int r; // fix it
+    unsigned short int g; // fix it
+    unsigned short int b; // fix it
 } Pixel;
 
 typedef struct _image {
@@ -12,16 +12,10 @@ typedef struct _image {
     // 1 -> g
     // 2 -> b
     unsigned short int pixel[512][512][3];
-    unsigned int w;
-    unsigned int h;
+    unsigned int w; // fix it
+    unsigned int h; // fix it
 } Image;
 
-
-int max(int a, int b) {
-    if (a > b)
-        return a;
-    return b;
-}
 
 int pixel_igual(Pixel p1, Pixel p2) {
     if (p1.r == p2.r &&
@@ -168,7 +162,7 @@ int main() {
                         pixel[1] = img.pixel[x][j][1];
                         pixel[2] = img.pixel[x][j][2];
 
-                        int p =  pixel[0] * .393 + pixel[1] * .769 + pixel[2] * .189;
+                        int p = pixel[0] * .393 + pixel[1] * .769 + pixel[2] * .189;
                         int menor_r = (255 >  p) ? p : 255;
                         img.pixel[x][j][0] = menor_r;
 
