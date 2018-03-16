@@ -106,16 +106,25 @@ Image cutImage(Image img, int x, int y, int width, int height) {
     return cortada;
 }
 
+// Function that reads the Image Type
+char readyImageType(char p3[4]){
+    scanf("%s", p3);
+    return *p3;
+}
+
+// Function to read width, height and color of image
+// void readPixels(Image img, int max_color){
+//     scanf("%u %u %d", &img.width, &img.height, &max_color);
+// }
 
 int main() {
     Image img;
 
-    // read type of image
     char p3[4];
-    scanf("%s", p3);
+    readyImageType(p3);
 
-    // read width height and color of image
     int max_color;
+    // readPixels(img, max_color);
     scanf("%u %u %d", &img.width, &img.height, &max_color);
 
     // read all pixels of image
@@ -164,7 +173,7 @@ int main() {
 
                 break;
             }
-            case 3: { // Borrar
+            case 3: { // Filtro Borrar
                 int tamanho = 0;
                 scanf("%d", &tamanho);
                 blur(img.height, img.pixel, tamanho, img.width);
@@ -179,7 +188,7 @@ int main() {
                 }
                 break;
             }
-            case 5: { // Espelhamento
+            case 5: { // Filtro Espelhamento
                 int horizontal = 0;
                 scanf("%d", &horizontal);
 
