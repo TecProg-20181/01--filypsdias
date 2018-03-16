@@ -1,5 +1,8 @@
 #include <stdio.h>
 
+unsigned int counter;
+unsigned int counter_two;
+
 typedef struct _pixel {
     unsigned short int red;
     unsigned short int green;
@@ -16,21 +19,30 @@ typedef struct _image {
     unsigned int height;
 } Image;
 
+/* Function to calculate the pixels average */
+int calculatePixelAverage(Image img){
+    int average = img.pixel[counter][counter_two][0] +
+                  img.pixel[counter][counter_two][1] +
+                  img.pixel[counter][counter_two][2];
+    average /= 3;
+
+    return average;
+}
+
+void transfeerData(Image img, int average){
+    img.pixel[counter][counter_two][0] = average;
+    img.pixel[counter][counter_two][1] = average;
+    img.pixel[counter][counter_two][2] = average;
+}
 
 Image scaleInGray(Image img) {
-
     for (unsigned int i = 0; i < img.height; ++i) {
         for (unsigned int j = 0; j < img.width; ++j) {
-            int media = img.pixel[i][j][0] +
-                        img.pixel[i][j][1] +
-                        img.pixel[i][j][2];
-            media /= 3;
-            img.pixel[i][j][0] = media;
-            img.pixel[i][j][1] = media;
-            img.pixel[i][j][2] = media;
+        
+            int average = calculatePixelAverage(img);
+            transfeerData(img, average);
         }
     }
-
     return img;
 }
 
@@ -106,22 +118,19 @@ Image cutImage(Image img, int x, int y, int width, int height) {
     return cortada;
 }
 
-// Function that reads the Image Type
-char readyImageType(char p3[4]){
-    scanf("%s", p3);
-    return *p3;
+/* Function that reads the Image Type */
+char readImageType(char *pixels){
+    scanf("%s", pixels);
+    return *pixels;
 }
 
 // Function to read width, height and color of image
-// void readPixels(Image img, int max_color){
-//     scanf("%u %u %d", &img.width, &img.height, &max_color);
-// }
 
 int main() {
     Image img;
 
     char p3[4];
-    readyImageType(p3);
+    readImageType(p3);
 
     int max_color;
     // readPixels(img, max_color);
