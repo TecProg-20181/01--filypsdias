@@ -7,15 +7,14 @@ typedef struct _pixel {
     unsigned short int red;
     unsigned short int green;
     unsigned short int blue;
-} PixelColor;
+} Pixel;
 
 typedef struct _image {
     /* [width][height][rgb] */
     /* 0 -> r */
     /* 1 -> g */
     /* 2 -> b */
-    // unsigned short int pixel[512][512][3];
-    PixelColor pixel[512][512];
+    Pixel pixel[512][512];
     unsigned int width;
     unsigned int height;
 } Image;
@@ -26,7 +25,7 @@ Image sepia();
 Image rotate();
 Image mirroringImage();
 Image cut();
-Image blur();
+void blur();
 
 /* Char function */
 char readImageType();
@@ -71,7 +70,9 @@ int main() {
                 break;
             }
             case 3: { /* Filtro Borrar */
-                img = blur(img);
+                int tamanho = 0;
+                scanf("%d", &tamanho);
+                blur(img.height, img.pixel, tamanho, img.width);
                 break;
             }
             case 4: { /* Rotacao */
@@ -130,15 +131,15 @@ void transfeerPixelData(Image img, int average) {
 }
 
 Image scaleInGray(Image img) {
-    for (unsigned int i = 0; i < img.height; ++i) {
-        for (unsigned int j = 0; j < img.width; ++j) {
-            int media = img.pixel[i][j].red +
-                        img.pixel[i][j].green +
-                        img.pixel[i][j].blue;
+    for (counter = 0; counter < img.height; ++counter) {
+        for (unsigned int counter_two = 0; counter_two < img.width; ++counter_two) {
+            int media = img.pixel[counter][counter_two].red +
+                        img.pixel[counter][counter_two].green +
+                        img.pixel[counter][counter_two].blue;
             media /= 3;
-            img.pixel[i][j].red = media;
-            img.pixel[i][j].green = media;
-            img.pixel[i][j].blue = media;
+            img.pixel[counter][counter_two].red = media;
+            img.pixel[counter][counter_two].green = media;
+            img.pixel[counter][counter_two].blue = media;
         }
     }
 
@@ -175,40 +176,33 @@ Image sepia(Image img) {
     return img;
 }
 
-void blurImage(unsigned int h, int T, unsigned int w) {
-    Image img;
-    for (unsigned int i = 0; i < img.height; ++i) {
-        for (unsigned int j = 0; j < img.width; ++j) {
-        PixelColor media = {0, 0, 0};
+void blur(unsigned int h, unsigned short int pixel[512][512][3], int T, unsigned int w) {
+    for (unsigned int i = 0; i < h; ++i) {
+        for (unsigned int j = 0; j < w; ++j) {
+            Pixel media = {0, 0, 0};
 
             int menor_h = max(h - 1, i + T/2);
             int min_w = max(w - 1, j + T/2);
-            for(int x = max(0, i - T/2); x <= menor_h; ++x) {
-                for(int y = max(0, j - T/2); y <= min_w; ++y) {
-                    media.red += img.pixel[x][y].red;
-                    media.green += img.pixel[x][y].green;
-                    media.blue += img.pixel[x][y].blue;
+            for(int x = (0 > i - T/2 ? 0 : i - T/2); x <= menor_h; ++x) {
+                for(int y = (0 > j - T/2 ? 0 : j - T/2); y <= min_w; ++y) {
+                    media.red += pixel[x][y][0];
+                    media.green += pixel[x][y][1];
+                    media.blue += pixel[x][y][2];
                 }
             }
 
+            // printf("%u", media.r)
             media.red /= T * T;
             media.green /= T * T;
             media.blue /= T * T;
 
-            img.pixel[i][j].red = media.red;
-            img.pixel[i][j].green = media.green;
-            img.pixel[i][j].blue = media.blue;
+            pixel[i][j][0] = media.red;
+            pixel[i][j][1] = media.green;
+            pixel[i][j][2] = media.blue;
         }
     }
 }
 
-Image blur(Image img){
-    int tamanho = 0;
-        scanf("%d", &tamanho);
-        blurImage(img.height, tamanho, img.width);
-
-        return img;
-}
 
 Image rotate90Right(Image img) {
     Image rotaded;
@@ -256,7 +250,7 @@ Image mirroringImage(Image img) {
             } else {
                 x = img.height -1 - i2;
             }
-            PixelColor aux1;
+            Pixel aux1;
             aux1.red = img.pixel[i2][j].red;
             aux1.green = img.pixel[i2][j].green;
             aux1.blue = img.pixel[i2][j].blue;
